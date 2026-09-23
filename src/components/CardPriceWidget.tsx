@@ -1,13 +1,11 @@
-import React from 'react';
-import { useCardTraderZero } from './hook/useCardTraderZero';
+import { useCardTraderZero } from '../hook/useCardTraderZero';
 
 export const CardPriceWidget = ({ blueprintId }: { blueprintId: number }) => {
-    const API_TOKEN = 'YOUR_CARDTRADER_API_TOKEN';
+    const apiToken = import.meta.env.VITE_CARDTRADER_API_TOKEN;
 
     const { products, loading, error, stats } = useCardTraderZero({
-        apiToken: API_TOKEN,
+        apiToken,
         blueprintId: blueprintId,
-        language: 'en',   // Filter by English
         zeroOnly: true,   // Only include CT Zero listings
     });
 
