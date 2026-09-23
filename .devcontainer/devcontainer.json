@@ -3,17 +3,68 @@
   "hostRequirements": {
     "cpus": 4
   },
-  "waitFor": "onCreateCommand",
+  "onCreateCommand": "npm install",
   "updateContentCommand": "npm install",
-  "postCreateCommand": "npm install",
   "customizations": {
     "codespaces": {
       "openFiles": [
+        "README.md",
         "src/App.tsx"
       ]
     },
     "vscode": {
-      "extensions": []
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "dbaeumer.vscode-eslint",
+        "github.vscode-pull-request-github"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll": "explicit",
+          "source.organizeImports": "explicit"
+        },
+        "files.exclude": {
+          "**/.git": true,
+          "**/.svn": true,
+          "**/.hg": true,
+          "**/CVS": true,
+          "**/.DS_Store": true,
+          "**/node_modules": true,
+          "**/dist": true,
+          "**/*.log": true
+        },
+        "search.exclude": {
+          "**/node_modules": true,
+          "**/dist": true
+        },
+        "explorer.compactFolders": true,
+        "explorer.autoReveal": true,
+        "explorer.excludeGitIgnore": true,
+        "typescript.enableCompileOnSave": false,
+        "typescript.tsdk": "node_modules/typescript/lib",
+        "kilo-code.new.autocomplete.enableAutoTrigger": false,
+        "kilo-code.new.autocomplete.enableSmartInlineTaskKeybinding": false,
+        "kilo-code.new.autocomplete.enableChatAutocomplete": false,
+        "kilo-code.new.autocomplete.enableIndicator": false,
+        "workbench.iconTheme": "vscode-icons",
+        "workbench.colorTheme": "GitHub Dark Default",
+        "workbench.startupEditor": "none",
+        "workbench.view.enabled": {
+          "workbench.views.explorer.fileView": true,
+          "workbench.views.scm.view": true,
+          "workbench.views.debug": false,
+          "workbench.views.search": false,
+          "workbench.views.extension": false,
+          "workbench.views.output": false,
+          "workbench.views.debuggers": false,
+          "workbench.views.debugConsole": false,
+          "workbench.views.debugFloating": false
+        },
+        "terminal.integrated.defaultLocation": "panel"
+      }
     }
   },
   "portsAttributes": {

@@ -56,8 +56,17 @@ The production bundle is output to the `dist/` directory.
 
 "CardTrader Zero" is CardTrader's own fulfillment network. Listings from sellers enrolled in it ship via CT's warehouse, giving buyers a lower-fee, faster experience. This app surfaces only those listings.
 
+## Styling
+
+The UI is built with [Tailwind CSS](https://tailwindcss.com/) v4 via `@tailwindcss/vite`.
+
+- Utility classes live directly in the JSX components
+- `src/index.css` contains the `@tailwind` directives
+- `tailwind.config.js` and `postcss.config.js` drive the build pipeline
+
 ## Learn More
 
 - [Vite](https://vitejs.dev/guide/)
 - [React](https://reactjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
 - [CardTrader API](https://docs.cardtrader.com/)
