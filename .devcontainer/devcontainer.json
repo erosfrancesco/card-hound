@@ -5,20 +5,15 @@
   },
   "waitFor": "onCreateCommand",
   "updateContentCommand": "npm install",
-  "postCreateCommand": "",
-  "postAttachCommand": {
-    "server": "npm start"
-  },
+  "postCreateCommand": "npm install",
   "customizations": {
     "codespaces": {
       "openFiles": [
-        "src/App.jsx"
+        "src/App.tsx"
       ]
     },
     "vscode": {
-      "extensions": [
-        "DanielSanMedium.dscodegpt"
-      ]
+      "extensions": []
     }
   },
   "portsAttributes": {
