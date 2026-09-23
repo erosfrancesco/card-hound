@@ -21,7 +21,6 @@
       ],
       "settings": {
         "editor.formatOnSave": true,
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.codeActionsOnSave": {
           "source.fixAll": "explicit",
           "source.organizeImports": "explicit"
@@ -44,12 +43,13 @@
         "explorer.autoReveal": true,
         "explorer.excludeGitIgnore": true,
         "typescript.enableCompileOnSave": false,
-        "typescript.tsdk": "node_modules/typescript/lib",
+        "typescript.tsdk.path": "node_modules/typescript/lib",
+        "css.validate": false,
+        "css.lint.unknownAtRules": "ignore",
         "kilo-code.new.autocomplete.enableAutoTrigger": false,
         "kilo-code.new.autocomplete.enableSmartInlineTaskKeybinding": false,
         "kilo-code.new.autocomplete.enableChatAutocomplete": false,
         "kilo-code.new.autocomplete.enableIndicator": false,
-        "workbench.iconTheme": "vscode-icons",
         "workbench.colorTheme": "GitHub Dark Default",
         "workbench.startupEditor": "none",
         "workbench.view.enabled": {
@@ -63,7 +63,7 @@
           "workbench.views.debugConsole": false,
           "workbench.views.debugFloating": false
         },
-        "terminal.integrated.defaultLocation": "panel"
+        "terminal.integrated.defaultLocation": "editor"
       }
     }
   },
