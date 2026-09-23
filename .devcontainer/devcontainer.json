@@ -14,6 +14,11 @@
       "openFiles": [
         "src/App.jsx"
       ]
+    },
+    "vscode": {
+      "extensions": [
+        "DanielSanMedium.dscodegpt"
+      ]
     }
   },
   "portsAttributes": {
@@ -22,5 +27,7 @@
       "onAutoForward": "openPreview"
     }
   },
-  "forwardPorts": [3000]
+  "forwardPorts": [
+    3000
+  ]
 }
