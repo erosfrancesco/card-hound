@@ -37,16 +37,3 @@ export interface CardModel {
 export interface CardTraderSearchOptions {
   apiKey: string;
 }
-
-/**
- * Return type definition for the useCardTraderSearch hook.
- */
-export interface UseCardTraderSearchReturn {
-  query: string;
-  loading: boolean;
-  error: string | null;
-  card: CardModel | null;
-  setQuery: (query: string) => void;
-  handleQueryChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  searchCard: (searchQuery?: string) => Promise<void>;
-}

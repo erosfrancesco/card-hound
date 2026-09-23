@@ -1,5 +1,5 @@
-import React, { useState, useCallback, FormEvent, ChangeEvent } from 'react';
-import { CardModel } from '../models/cardTraderZeroCard';
+import React, { FormEvent } from 'react';
+import { useCardTraderNameSearch } from '../hook/useCardTraderNameSearch';
 
 export interface CardTraderImageDisplayProps {
   apiKey: string;
@@ -8,64 +8,15 @@ export interface CardTraderImageDisplayProps {
 export const CardTraderImageDisplay: React.FC<CardTraderImageDisplayProps> = ({
   apiKey,
 }) => {
-  const [query, setQuery] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [card, setCard] = useState<CardModel | null>(null);
-
-  const handleQueryChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    setQuery(e.target.value);
-  };
-
-  const searchCard = useCallback(
-    async (searchQuery: string = query): Promise<void> => {
-      const trimmedQuery = searchQuery.trim();
-      if (!trimmedQuery) return;
-
-      setLoading(true);
-      setError(null);
-      setCard(null);
-
-      try {
-        const response = await fetch(
-          `https://api.cardtrader.com/api/v2/blueprints/export?name=${encodeURIComponent(trimmedQuery)}`,
-          {
-            headers: {
-              Authorization: `Bearer ${apiKey}`,
-              Accept: 'application/json',
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`API Error: ${response.status} ${response.statusText}`);
-        }
-
-        const blueprints = await response.json();
-
-        const match = blueprints.find(
-          (bp: any) => bp.image_url && bp.image_url.trim() !== ''
-        );
-
-        if (match) {
-          setCard({
-            id: match.id,
-            name: match.name,
-            imageUrl: match.image_url,
-            categoryName: match.category?.name || undefined,
-            expansionName: match.expansion?.name || undefined,
-          });
-        } else {
-          setError('No card found or no image available for this query.');
-        }
-      } catch (err: any) {
-        setError(err.message || 'Failed to fetch card data.');
-      } finally {
-        setLoading(false);
-      }
-    },
-    [query, apiKey]
-  );
+  const {
+    card,
+    loading,
+    error,
+    blueprintId,
+    handleBlueprintIdChange,
+    searchCard,
+    clearResults,
+  } = useCardTraderNameSearch(apiKey);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -86,34 +37,45 @@ export const CardTraderImageDisplay: React.FC<CardTraderImageDisplayProps> = ({
     <div className="bg-surface-container shadow-elev-2 rounded-xl p-6 max-w-md mx-auto">
       <div className="flex items-center gap-3 mb-5">
         <span className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary text-lg">
-          🔍
+          🃏
         </span>
         <div>
-          <h3 className="text-lg font-medium text-on-surface m-0">CardTrader Image Search</h3>
-          <p className="text-sm text-on-surface-variant m-0">Find cards by name</p>
+          <h3 className="text-lg font-medium text-on-surface m-0">CardTrader Image Lookup</h3>
+          <p className="text-sm text-on-surface-variant m-0">Look up a card by blueprint ID</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <div className="relative">
           <input
-            type="text"
+            type="number"
             placeholder=" "
-            value={query}
-            onChange={handleQueryChange}
+            value={blueprintId}
+            onChange={handleBlueprintIdChange}
             disabled={loading}
             className="md-text-field"
           />
-          <label className="md-text-field-label">Enter card name (e.g. Black Lotus)</label>
+          <label className="md-text-field-label">Blueprint ID (e.g. 16354)</label>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading || !query.trim()}
-          className="md-filled-button self-start"
-        >
-          {loading ? 'Searching...' : 'Search'}
-        </button>
+        <div className="flex gap-2 self-start">
+          <button
+            type="submit"
+            disabled={loading || !blueprintId.trim()}
+            className="md-filled-button"
+          >
+            {loading ? 'Looking up...' : 'Lookup'}
+          </button>
+          {card && (
+            <button
+              type="button"
+              onClick={clearResults}
+              className="md-outlined-button"
+            >
+              Clear
+            </button>
+          )}
+        </div>
       </form>
 
       {error && (

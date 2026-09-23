@@ -25,6 +25,7 @@ function App() {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 pb-24 flex flex-col gap-6">
+        <CardTraderImageDisplay apiKey={import.meta.env.VITE_CARDTRADER_API_TOKEN} />
         {CARDS.map((card) => (
           <CardListWidget
             key={card.blueprintId}
@@ -32,8 +33,6 @@ function App() {
             cardName={card.name}
           />
         ))}
-
-        <CardTraderImageDisplay apiKey={import.meta.env.VITE_CARDTRADER_API_TOKEN} />
       </main>
 
       <footer className="text-center text-xs text-on-surface-variant pb-8">
