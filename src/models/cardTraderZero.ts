@@ -29,23 +29,9 @@ export interface CardTraderProduct {
     };
 }
 
-export interface UseCardTraderZeroOptions {
-    apiToken: string;
-    blueprintId: number | null;
-    // Accepts a single language ('en') or an array of languages (['en', 'it'])
-    languages?: string | string[];
-    zeroOnly?: boolean;
-}
-
-export interface UseCardTraderZeroReturn {
-    products: CardTraderProduct[];
-    loading: boolean;
-    error: string | null;
-    refetch: () => void;
-    stats: {
-        lowestPrice: number | null;
-        highestPrice: number | null;
-        currency: string;
-        totalAvailable: number;
-    };
+export interface CardTraderProductStats {
+    lowestPrice: number | null;
+    highestPrice: number | null;
+    currency: string;
+    totalAvailable: number;
 }

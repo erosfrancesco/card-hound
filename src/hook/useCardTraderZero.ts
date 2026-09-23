@@ -1,18 +1,35 @@
-import { useState, useEffect, useCallback } from 'react';
-import { CardTraderProduct, UseCardTraderZeroOptions, UseCardTraderZeroReturn } from '../models/cardTraderZero';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { CardTraderProduct, CardTraderProductStats } from '../models/cardTraderZero'; // Adjust import path as needed
 
+export type SortOrder = 'asc' | 'desc';
+
+interface UseCardTraderZeroOptions {
+  apiToken: string;
+  blueprintId: number | null;
+  languages?: string | string[];
+  zeroOnly?: boolean;
+  sortOrder?: SortOrder;
+}
+
+interface UseCardTraderZeroReturn {
+  products: CardTraderProduct[];
+  loading: boolean;
+  error: string | null;
+  refetch: () => void;
+  stats: CardTraderProductStats;
+}
 
 export const useCardTraderZero = ({
   apiToken,
   blueprintId,
-  languages = ['en', 'it'], // Default to EN and IT
+  languages = ['en', 'it'],
   zeroOnly = true,
+  sortOrder = 'asc',
 }: UseCardTraderZeroOptions): UseCardTraderZeroReturn => {
   const [products, setProducts] = useState<CardTraderProduct[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Normalize languages into a clean string array lowercase: ['en', 'it']
   const langList = Array.isArray(languages)
     ? languages.map((l) => l.toLowerCase())
     : languages
@@ -50,8 +67,8 @@ export const useCardTraderZero = ({
         ? data
         : data[blueprintId] || [];
 
-      // Filter by CT Zero and match any of the allowed languages in langList
-      const filteredProducts = rawProducts.filter((product) => {
+      // Filter by Zero availability and language selection
+      const filtered = rawProducts.filter((product) => {
         const isZero = zeroOnly ? product.user?.can_sell_via_hub : true;
 
         const itemLang = (
@@ -60,30 +77,49 @@ export const useCardTraderZero = ({
           ''
         ).toLowerCase();
 
-        // If no language filter specified, keep all. Otherwise check inclusion.
         const matchesLang = langList.length === 0 || langList.includes(itemLang);
 
         return isZero && matchesLang;
       });
 
-      setProducts(filteredProducts);
+      // Sort products by price (cents)
+      const sorted = [...filtered].sort((a, b) => {
+        return sortOrder === 'asc'
+          ? a.price.cents - b.price.cents
+          : b.price.cents - a.price.cents;
+      });
+
+      setProducts(sorted);
     } catch (err: any) {
       setError(err.message || 'An unknown error occurred');
     } finally {
       setLoading(false);
     }
-  }, [apiToken, blueprintId, zeroOnly, JSON.stringify(langList)]);
+  }, [apiToken, blueprintId, zeroOnly, sortOrder, JSON.stringify(langList)]);
 
   useEffect(() => {
     fetchCardData();
   }, [fetchCardData]);
 
-  const stats = {
-    lowestPrice: products.length > 0 ? Math.min(...products.map((p) => p.price.cents)) / 100 : null,
-    highestPrice: products.length > 0 ? Math.max(...products.map((p) => p.price.cents)) / 100 : null,
-    currency: products[0]?.price?.currency || 'EUR',
-    totalAvailable: products.reduce((acc, curr) => acc + curr.quantity, 0),
-  };
+  const stats = useMemo(() => {
+    if (products.length === 0) {
+      return {
+        lowestPrice: null,
+        highestPrice: null,
+        currency: 'EUR',
+        totalAvailable: 0,
+      };
+    }
+
+    const pricesCents = products.map((p) => p.price.cents);
+
+    return {
+      lowestPrice: Math.min(...pricesCents) / 100,
+      highestPrice: Math.max(...pricesCents) / 100,
+      currency: products[0]?.price?.currency || 'EUR',
+      totalAvailable: products.reduce((acc, curr) => acc + curr.quantity, 0),
+    };
+  }, [products]);
 
   return {
     products,
