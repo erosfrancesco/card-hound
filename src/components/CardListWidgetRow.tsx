@@ -1,17 +1,15 @@
 import React from 'react';
 import { CardTraderProduct, CardTraderProductStats } from '../models/cardTraderZero';
 
-export const getConditionColor = (condition?: string): string => {
-  if (!condition) return '#222222';
+const conditionTone = (condition?: string): string => {
+  if (!condition) return 'text-on-surface-variant';
   const cond = condition.toLowerCase();
-
-  if (cond.includes('mint') || cond === 'nm') return '#2e7d32';
-  if (cond.includes('slight') || cond.includes('light') || cond === 'sp' || cond === 'lp' || cond === 'ex') return '#1565c0';
-  if (cond.includes('moderate') || cond.includes('play') || cond === 'mp' || cond === 'gd') return '#e65100';
-  if (cond.includes('heavy') || cond === 'hp' || cond === 'po' || cond.includes('poor')) return '#c62828';
-  if (cond.includes('damage') || cond === 'dmg') return '#8e0000';
-
-  return '#222222';
+  if (cond.includes('mint') || cond === 'nm') return 'text-green-400';
+  if (cond.includes('slight') || cond.includes('light') || cond === 'sp' || cond === 'lp' || cond === 'ex') return 'text-primary';
+  if (cond.includes('moderate') || cond.includes('play') || cond === 'mp' || cond === 'gd') return 'text-amber-400';
+  if (cond.includes('heavy') || cond === 'hp' || cond === 'po' || cond.includes('poor')) return 'text-error';
+  if (cond.includes('damage') || cond === 'dmg') return 'text-error';
+  return 'text-on-surface-variant';
 };
 
 interface CardListRowWidgetProps {
@@ -35,32 +33,31 @@ export const CardListRowWidget: React.FC<CardListRowWidgetProps> = ({
 
   return (
     <li
-      className="flex justify-between items-center py-3"
-      style={{ borderBottom: hasBorder ? '1px solid #eee' : 'none' }}
+      className="flex justify-between items-center py-3.5 px-1 -mx-1 rounded-lg transition-colors hover:bg-surface-container-high"
+      style={{ borderBottom: hasBorder ? '1px solid var(--md-sys-color-outline-variant)' : 'none' }}
     >
       <div className="flex items-center gap-3">
         <span
-          className="w-6 h-6 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-semibold"
+          className="w-6 h-6 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center text-xs font-semibold"
         >
           {count + 1}
         </span>
 
         <div>
           <div
-            className="font-semibold text-sm"
-            style={{ color: getConditionColor(product.properties_hash.condition) }}
+            className={`font-semibold text-sm ${conditionTone(product.properties_hash.condition)}`}
           >
             {product.name_en}
           </div>
-          <div className="text-xs text-slate-500 mt-0.5">
-            <span className="bg-slate-100 text-blue-700 px-1.5 py-0.5 rounded text-xs font-semibold mr-1">
+          <div className="text-sm text-on-surface-variant mt-0.5 flex items-center flex-wrap gap-1">
+            <span className="bg-surface-container-high text-primary px-1.5 py-0.5 rounded text-xs font-semibold">
               {language}
             </span>
 
             {isFoil && (
-              <span className="ml-1 text-amber-700 font-semibold">✨ Foil</span>
+              <span className="text-amber-400 font-semibold">✨ Foil</span>
             )}
-            <span className="ml-2 text-slate-500">
+            <span className="text-on-surface-variant">
               • Seller: {product.user.username}
             </span>
           </div>
@@ -68,10 +65,10 @@ export const CardListRowWidget: React.FC<CardListRowWidgetProps> = ({
       </div>
 
       <div className="text-right">
-        <div className="text-base font-bold text-green-700">
+        <div className="text-base font-bold text-green-400">
           {price} {product.price.currency}
         </div>
-        <div className="text-xs text-slate-500">
+        <div className="text-sm text-on-surface-variant">
           Qty: {product.quantity}
         </div>
       </div>
@@ -87,10 +84,25 @@ export const CardListStatRowWidget: React.FC<CardListStatsRowWidgetProps> = ({
   stats,
 }) => {
   return (
-    <div className="flex justify-between items-center px-3.5 py-2.5 bg-slate-50 rounded-md mb-4 text-xs">
-      <span>Lowest: <strong>{(stats.lowestPrice ?? 0).toFixed(2)} {stats.currency}</strong></span>
-      <span>Highest: <strong>{(stats.highestPrice ?? 0).toFixed(2)} {stats.currency}</strong></span>
-      <span>Available: <strong>{stats.totalAvailable}</strong></span>
+    <div className="flex justify-between items-center px-3.5 py-2.5 bg-surface-container rounded-lg mb-4 text-sm">
+      <span className="text-on-surface-variant">
+        Lowest:{' '}
+        <strong className="text-green-400 font-semibold">
+          {(stats.lowestPrice ?? 0).toFixed(2)} {stats.currency}
+        </strong>
+      </span>
+      <span className="text-on-surface-variant">
+        Highest:{' '}
+        <strong className="text-amber-400 font-semibold">
+          {(stats.highestPrice ?? 0).toFixed(2)} {stats.currency}
+        </strong>
+      </span>
+      <span className="text-on-surface">
+        Available:{' '}
+        <strong className="font-semibold">
+          {stats.totalAvailable}
+        </strong>
+      </span>
     </div>
   );
 };

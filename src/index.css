@@ -1,3 +1,77 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --md-sys-color-background: #0f1115;
+  --md-sys-color-surface: #161922;
+  --md-sys-color-surface-variant: #1d2130;
+  --md-sys-color-surface-container-low: #161922;
+  --md-sys-color-surface-container: #1b1f2e;
+  --md-sys-color-surface-container-high: #202536;
+  --md-sys-color-surface-container-highest: #252a3d;
+  --md-sys-color-outline: #353c52;
+  --md-sys-color-outline-variant: #2a3042;
+  --md-sys-color-primary: #7ea3ff;
+  --md-sys-color-primary-container: #283a66;
+  --md-sys-color-on-primary: #001a47;
+  --md-sys-color-secondary: #9fc2ff;
+  --md-sys-color-error: #ffb4a2;
+  --md-sys-color-on-error: #410002;
+  --md-sys-color-on-surface: #e6e9f2;
+  --md-sys-color-on-surface-variant: #a3aac2;
+  --md-sys-color-scrim: #00000080;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-surface);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Material state layers */
+.state-layer {
+  position: relative;
+}
+.state-layer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--md-sys-color-on-surface);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.state-layer:hover::before { opacity: 0.08; }
+.state-layer:focus-visible::before { opacity: 0.12; }
+.state-layer:active::before { opacity: 0.16; }
+
+/* Material ripple on click */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+.ripple::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  pointer-events: none;
+}
+.ripple:active::after {
+  transform: scale(2.5);
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.5s ease;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--md-sys-color-outline-variant); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--md-sys-color-outline); }

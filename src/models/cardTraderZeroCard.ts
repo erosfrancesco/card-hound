@@ -2,51 +2,51 @@
  * Raw blueprint model structure returned by CardTrader API v2.
  */
 export interface CardTraderRawBlueprint {
+  id: number;
+  name: string;
+  version?: string;
+  image_url?: string | null;
+  category_id: number;
+  game_id: number;
+  expansion_id: number;
+  category?: {
     id: number;
     name: string;
-    version?: string;
-    image_url?: string | null;
-    category_id: number;
-    game_id: number;
-    expansion_id: number;
-    category?: {
-        id: number;
-        name: string;
-    };
-    expansion?: {
-        id: number;
-        name: string;
-        code: string;
-    };
+  };
+  expansion?: {
+    id: number;
+    name: string;
+    code: string;
+  };
 }
 
 /**
  * Cleaned card entity model used within the React application.
  */
 export interface CardModel {
-    id: number;
-    name: string;
-    imageUrl: string;
-    categoryName?: string;
-    expansionName?: string;
+  id: number;
+  name: string;
+  imageUrl: string;
+  categoryName?: string;
+  expansionName?: string;
 }
 
 /**
  * Props passed into the presentation component or hook initialization.
  */
 export interface CardTraderSearchOptions {
-    apiKey: string;
+  apiKey: string;
 }
 
 /**
  * Return type definition for the useCardTraderSearch hook.
  */
 export interface UseCardTraderSearchReturn {
-    query: string;
-    loading: boolean;
-    error: string | null;
-    card: CardModel | null;
-    setQuery: (query: string) => void;
-    handleQueryChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    searchCard: (searchQuery?: string) => Promise<void>;
+  query: string;
+  loading: boolean;
+  error: string | null;
+  card: CardModel | null;
+  setQuery: (query: string) => void;
+  handleQueryChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  searchCard: (searchQuery?: string) => Promise<void>;
 }

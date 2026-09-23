@@ -1,152 +1,146 @@
-import React, { FormEvent, CSSProperties } from 'react';
-import { useCardTraderSearch } from './useCardTraderSearch';
-import { CardTraderSearchOptions } from '../models/cardTraderZeroCards';
+import React, { useState, useCallback, FormEvent, ChangeEvent } from 'react';
+import { CardModel } from '../models/cardTraderZeroCard';
 
-export const CardTraderImageDisplay: React.FC<CardTraderSearchOptions> = ({ apiKey }) => {
-    const {
-        query,
-        loading,
-        error,
-        card,
-        handleQueryChange,
-        searchCard
-    } = useCardTraderSearch(apiKey);
+export interface CardTraderImageDisplayProps {
+  apiKey: string;
+}
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
-        e.preventDefault();
-        searchCard();
-    };
+export const CardTraderImageDisplay: React.FC<CardTraderImageDisplayProps> = ({
+  apiKey,
+}) => {
+  const [query, setQuery] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [card, setCard] = useState<CardModel | null>(null);
 
+  const handleQueryChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setQuery(e.target.value);
+  };
+
+  const searchCard = useCallback(
+    async (searchQuery: string = query): Promise<void> => {
+      const trimmedQuery = searchQuery.trim();
+      if (!trimmedQuery) return;
+
+      setLoading(true);
+      setError(null);
+      setCard(null);
+
+      try {
+        const response = await fetch(
+          `https://api.cardtrader.com/api/v2/blueprints/export?name=${encodeURIComponent(trimmedQuery)}`,
+          {
+            headers: {
+              Authorization: `Bearer ${apiKey}`,
+              Accept: 'application/json',
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`API Error: ${response.status} ${response.statusText}`);
+        }
+
+        const blueprints = await response.json();
+
+        const match = blueprints.find(
+          (bp: any) => bp.image_url && bp.image_url.trim() !== ''
+        );
+
+        if (match) {
+          setCard({
+            id: match.id,
+            name: match.name,
+            imageUrl: match.image_url,
+            categoryName: match.category?.name || undefined,
+            expansionName: match.expansion?.name || undefined,
+          });
+        } else {
+          setError('No card found or no image available for this query.');
+        }
+      } catch (err: any) {
+        setError(err.message || 'Failed to fetch card data.');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [query, apiKey]
+  );
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    searchCard();
+  };
+
+  if (!apiKey) {
     return (
-        <div style={styles.cardContainer}>
-            <header style={styles.header}>
-                <h2 style={styles.title}>CardTrader Search</h2>
-            </header>
-
-            <form onSubmit={handleSubmit} style={styles.form}>
-                <input
-                    type="text"
-                    placeholder="Enter card name (e.g., Black Lotus)"
-                    value={query}
-                    onChange={handleQueryChange}
-                    disabled={loading}
-                    style={styles.input}
-                />
-                <button
-                    type="submit"
-                    disabled={loading || !query.trim()}
-                    style={{
-                        ...styles.button,
-                        opacity: loading || !query.trim() ? 0.6 : 1
-                    }}
-                >
-                    {loading ? 'Searching...' : 'Search'}
-                </button>
-            </form>
-
-            {error && <div style={styles.errorMessage}>{error}</div>}
-
-            {card && (
-                <div style={styles.resultBox}>
-                    <h3 style={styles.cardTitle}>{card.name}</h3>
-                    {card.expansionName && (
-                        <span style={styles.badge}>{card.expansionName}</span>
-                    )}
-                    <div style={styles.imageWrapper}>
-                        <img
-                            src={card.imageUrl}
-                            alt={card.name}
-                            style={styles.image}
-                        />
-                    </div>
-                </div>
-            )}
-        </div>
+      <div className="bg-surface-container shadow-elev-2 rounded-xl p-5 text-on-surface">
+        <p className="text-on-surface-variant">
+          <strong>Configuration:</strong> Set <code>VITE_CARDTRADER_API_TOKEN</code> in your <code>.env</code> file.
+        </p>
+      </div>
     );
+  }
+
+  return (
+    <div className="bg-surface-container shadow-elev-2 rounded-xl p-6 max-w-md mx-auto">
+      <div className="flex items-center gap-3 mb-5">
+        <span className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary text-lg">
+          🔍
+        </span>
+        <div>
+          <h3 className="text-lg font-medium text-on-surface m-0">CardTrader Image Search</h3>
+          <p className="text-sm text-on-surface-variant m-0">Find cards by name</p>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder=" "
+            value={query}
+            onChange={handleQueryChange}
+            disabled={loading}
+            className="md-text-field"
+          />
+          <label className="md-text-field-label">Enter card name (e.g. Black Lotus)</label>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading || !query.trim()}
+          className="md-filled-button self-start"
+        >
+          {loading ? 'Searching...' : 'Search'}
+        </button>
+      </form>
+
+      {error && (
+        <div className="mt-4 p-3 bg-error/10 border border-error/30 text-error rounded-lg text-sm">
+          {error}
+        </div>
+      )}
+
+      {card && (
+        <div className="mt-5 flex flex-col items-center gap-3">
+          <h4 className="text-base font-medium text-on-surface m-0">{card.name}</h4>
+          {card.expansionName && (
+            <span className="text-xs bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded-full">
+              {card.expansionName}
+            </span>
+          )}
+          <div className="w-full rounded-lg overflow-hidden bg-surface-container-low shadow-elev-1">
+            <img
+              src={card.imageUrl}
+              alt={card.name}
+              className="w-full h-auto object-contain max-h-[480px]"
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
-const styles: Record<string, CSSProperties> = {
-    cardContainer: {
-        maxWidth: '420px',
-        margin: '24px auto',
-        padding: '24px',
-        borderRadius: '12px',
-        backgroundColor: '#ffffff',
-        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
-        fontFamily: 'system-ui, -apple-system, sans-serif'
-    },
-    header: {
-        marginBottom: '16px',
-        textAlign: 'center'
-    },
-    title: {
-        margin: 0,
-        fontSize: '1.25rem',
-        fontWeight: 600,
-        color: '#1f2937'
-    },
-    form: {
-        display: 'flex',
-        gap: '8px',
-        marginBottom: '16px'
-    },
-    input: {
-        flex: 1,
-        padding: '10px 14px',
-        borderRadius: '6px',
-        border: '1px solid #d1d5db',
-        fontSize: '0.95rem',
-        outline: 'none'
-    },
-    button: {
-        padding: '10px 18px',
-        borderRadius: '6px',
-        border: 'none',
-        backgroundColor: '#2563eb',
-        color: '#ffffff',
-        fontWeight: 500,
-        fontSize: '0.95rem',
-        cursor: 'pointer'
-    },
-    errorMessage: {
-        padding: '12px',
-        borderRadius: '6px',
-        backgroundColor: '#fef2f2',
-        color: '#dc2626',
-        fontSize: '0.875rem',
-        textAlign: 'center'
-    },
-    resultBox: {
-        marginTop: '20px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '8px'
-    },
-    cardTitle: {
-        margin: 0,
-        fontSize: '1.1rem',
-        color: '#111827',
-        textAlign: 'center'
-    },
-    badge: {
-        fontSize: '0.75rem',
-        padding: '2px 8px',
-        borderRadius: '12px',
-        backgroundColor: '#f3f4f6',
-        color: '#4b5563',
-        fontWeight: 500
-    },
-    imageWrapper: {
-        marginTop: '8px',
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center'
-    },
-    image: {
-        maxWidth: '100%',
-        maxHeight: '450px',
-        objectFit: 'contain',
-        borderRadius: '8px'
-    }
-};
+export default CardTraderImageDisplay;
