@@ -1,0 +1,249 @@
+import clsx from "clsx";
+import type {
+  ButtonHTMLAttributes,
+  HTMLAttributes,
+  InputHTMLAttributes,
+  SelectHTMLAttributes,
+} from "react";
+import { useState } from "react";
+
+type ButtonVariant = "primary" | "secondary" | "filled";
+
+const ButtonVariantClasses: Record<ButtonVariant, string | string[]> = {
+  primary: [
+    "rounded-md border border-cyan-400",
+    "font-semibold text-cyan-300",
+    "disabled:cursor-not-allowed disabled:opacity-40",
+  ],
+  secondary: [
+    "rounded-md border border-slate-700",
+    "text-slate-300",
+    "disabled:cursor-not-allowed disabled:opacity-40",
+  ],
+  filled: [
+    "rounded-md bg-cyan-400",
+    "font-semibold text-slate-950",
+    "disabled:cursor-not-allowed disabled:opacity-40",
+  ],
+};
+
+export function Button({
+  className,
+  variant = "primary",
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ButtonVariant }) {
+  return (
+    <button
+      className={clsx(
+        "cursor-pointer px-4 py-2 theme-button",
+        ButtonVariantClasses[variant],
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function Input({
+  className,
+  label,
+  id,
+  ...props
+}: InputHTMLAttributes<HTMLInputElement> & { label?: string }) {
+  if (label) {
+    return (
+      <div className="min-w-0 flex-1 w-full">
+        <label className="block mb-1 ml-1 text-sm text-slate-400" htmlFor={id}>
+          {label}
+        </label>
+        <input
+          className={clsx(
+            "min-w-0 flex-1 w-full",
+            "rounded-md border border-cyan-400/35 outline-none",
+            "theme-input",
+            "px-3 py-2",
+            "font-mono text-slate-100",
+            "focus:border-cyan-300 focus:ring-1 focus:ring-cyan-300/40",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            className,
+          )}
+          id={id}
+          {...props}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <input
+      className={clsx(
+        "min-w-0 flex-1",
+        "rounded-md border border-cyan-400/35 outline-none",
+        "theme-input",
+        "px-3 py-2",
+        "font-mono text-slate-100",
+        "focus:border-cyan-300 focus:ring-1 focus:ring-cyan-300/40",
+        "disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+      id={id}
+      {...props}
+    />
+  );
+}
+
+export function Select({
+  className,
+  label,
+  id,
+  children,
+  onBlur,
+  onChange,
+  onFocus,
+  onKeyDown,
+  onMouseDown,
+  ...props
+}: SelectHTMLAttributes<HTMLSelectElement> & { label?: string }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const select = (
+    <div className="relative min-w-0">
+      <select
+        className={clsx(
+          "min-w-0 w-full appearance-none rounded-md border border-slate-700 outline-none",
+          "theme-input px-3 py-2 pr-10",
+          "font-mono text-slate-100",
+          "focus:border-cyan-400",
+          "disabled:cursor-not-allowed disabled:opacity-50",
+          className,
+        )}
+        id={id}
+        onBlur={(event) => {
+          setIsOpen(false);
+          onBlur?.(event);
+        }}
+        onFocus={(event) => {
+          setIsOpen(true);
+          onFocus?.(event);
+        }}
+        onChange={(event) => {
+          setIsOpen(false);
+          onChange?.(event);
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") setIsOpen(false);
+          onKeyDown?.(event);
+        }}
+        onMouseDown={(event) => {
+          setIsOpen((open) => !open);
+          onMouseDown?.(event);
+        }}
+        {...props}
+      >
+        {children}
+      </select>
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+      >
+        {isOpen ? "⏶" : "⏷"}
+      </span>
+    </div>
+  );
+
+  return label ? (
+    <div>
+      <label className="block text-sm mb-1 ml-1 text-slate-400" htmlFor={id}>
+        {label}
+      </label>
+      {select}
+    </div>
+  ) : (
+    select
+  );
+}
+
+export function Checkbox({
+  className,
+  label,
+  id,
+  ...props
+}: InputHTMLAttributes<HTMLInputElement> & { label?: string }) {
+  const checkbox = (
+    <input
+      className={clsx(
+        "h-4 w-4 accent-cyan-400",
+        "disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+      id={id}
+      type="checkbox"
+      {...props}
+    />
+  );
+
+  return label ? (
+    <label
+      className="flex items-center gap-2 self-end pb-2 text-sm text-slate-400"
+      htmlFor={id}
+    >
+      {checkbox}
+      {label}
+    </label>
+  ) : (
+    checkbox
+  );
+}
+
+export function InfoPopup({
+  message,
+  label = "Info",
+}: {
+  message: string;
+  label?: string;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="relative shrink-0">
+      <button
+        aria-expanded={open}
+        className="rounded-md border border-slate-700 px-2 py-1 text-sm text-slate-400 hover:border-cyan-400 hover:text-cyan-300"
+        onClick={() => setOpen((isOpen) => !isOpen)}
+        type="button"
+      >
+        {label}
+      </button>
+      {open && (
+        <div className="absolute right-0 top-10 z-10 w-56 rounded-md border border-slate-700 theme-panel p-3 text-sm text-slate-300 shadow-xl">
+          {message}
+        </div>
+      )}
+    </div>
+  );
+}
+
+type BadgeVariant = "ok" | "warning" | "error";
+
+export function Badge({
+  className,
+  variant = "ok",
+  ...props
+}: HTMLAttributes<HTMLSpanElement> & { variant?: BadgeVariant }) {
+  return (
+    <span
+      className={clsx(
+        "rounded-full",
+        "px-2 p-1",
+        "text-sm",
+        variant === "ok" &&
+          "border border-emerald-300 bg-emerald-400 text-slate-950",
+        variant === "warning" &&
+          "border border-amber-300 bg-amber-400 text-slate-950",
+        variant === "error" &&
+          "border border-rose-400/50 bg-rose-400/10 text-rose-300 shadow-[inset_0_0_10px_rgba(251,113,133,0.28)]",
+        className,
+      )}
+      {...props}
+    />
+  );
+}

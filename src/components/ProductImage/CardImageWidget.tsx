@@ -1,5 +1,6 @@
 import React, { SubmitEvent } from "react";
-import { useCardTraderZeroSearch } from "../hook/useCardTraderZeroSearch";
+import { useCardTraderZeroSearch } from "../../hook/useCardTraderZeroSearch";
+import { Button, Input } from "../../layouts/Components";
 
 export interface CardTraderImageDisplayProps {}
 
@@ -23,23 +24,14 @@ export const CardTraderImageDisplay: React.FC<
 
   return (
     <div className="bg-surface-container shadow-elev-2 rounded-xl p-6 max-w-md mx-auto">
-      <div className="flex items-center gap-3 mb-5">
-        <span className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary text-lg">
-          🃏
-        </span>
-        <div>
-          <h3 className="text-lg font-medium text-on-surface m-0">
-            CardTrader Image Lookup
-          </h3>
-          <p className="text-sm text-on-surface-variant m-0">
-            Look up a card by blueprint ID
-          </p>
-        </div>
-      </div>
+      <h3 className="text-lg font-medium text-on-surface m-0">
+        🃏 CardTrader Image Lookup
+      </h3>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <div className="relative">
-          <input
+          <Input
+            label="Blueprint ID (e.g. 16354)"
             type="number"
             placeholder=" "
             value={blueprintId}
@@ -47,27 +39,24 @@ export const CardTraderImageDisplay: React.FC<
             disabled={loading}
             className="md-text-field"
           />
-          <label className="md-text-field-label">
-            Blueprint ID (e.g. 16354)
-          </label>
         </div>
 
         <div className="flex gap-2 self-start">
-          <button
+          <Button
             type="submit"
             disabled={loading || !blueprintId.trim()}
             className="md-filled-button"
           >
             {loading ? "Looking up..." : "Lookup"}
-          </button>
+          </Button>
           {card && (
-            <button
+            <Button
               type="button"
               onClick={clearResults}
               className="md-outlined-button"
             >
               Clear
-            </button>
+            </Button>
           )}
         </div>
       </form>
@@ -92,7 +81,7 @@ export const CardTraderImageDisplay: React.FC<
             <img
               src={card.imageUrl}
               alt={card.name}
-              className="w-full h-auto object-contain max-h-[480px]"
+              className="w-full h-auto object-contain max-h-120"
             />
           </div>
         </div>

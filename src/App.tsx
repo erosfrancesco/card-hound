@@ -1,5 +1,5 @@
 import { CardListWidget } from "./components/CardListWidget";
-import { CardTraderImageDisplay } from "./components/CardSearchWidget";
+import { CardTraderImageDisplay } from "./components/ProductImage/CardImageWidget";
 
 // CardTrader Zero blueprint IDs for demonstration
 const CARDS = [{ blueprintId: 16354, name: "Balefire Dragon" }];
