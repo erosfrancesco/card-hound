@@ -1,10 +1,8 @@
-import { CardListWidget } from './components/CardListWidget';
-import { CardTraderImageDisplay } from './components/CardSearchWidget';
+import { CardListWidget } from "./components/CardListWidget";
+import { CardTraderImageDisplay } from "./components/CardSearchWidget";
 
 // CardTrader Zero blueprint IDs for demonstration
-const CARDS = [
-  { blueprintId: 16354, name: 'Balefire Dragon' },
-];
+const CARDS = [{ blueprintId: 16354, name: "Balefire Dragon" }];
 
 function App() {
   return (
@@ -15,9 +13,7 @@ function App() {
             <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             CardTrader Zero Marketplace
           </div>
-          <h1 className="md-headline">
-            CardTrader Zero Tracker
-          </h1>
+          <h1 className="md-headline">CardTrader Zero Tracker</h1>
           <p className="mt-3 text-on-surface-variant text-base sm:text-lg">
             Live marketplace listings filtered for CardTrader Zero sellers
           </p>
@@ -25,13 +21,10 @@ function App() {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 pb-24 flex flex-col gap-6">
-        <CardTraderImageDisplay apiKey={import.meta.env.VITE_CARDTRADER_API_TOKEN} />
-        {CARDS.map((card) => (
-          <CardListWidget
-            key={card.blueprintId}
-            blueprintId={card.blueprintId}
-            cardName={card.name}
-          />
+        <CardTraderImageDisplay />
+
+        {CARDS.map((card, i) => (
+          <CardListWidget key={i} blueprintId={card.blueprintId} />
         ))}
       </main>
 

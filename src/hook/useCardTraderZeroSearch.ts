@@ -1,7 +1,6 @@
-import { useState, useCallback } from 'react';
-import { CardModel } from '../models/cardTraderZeroCard';
-
-const API_BASE = 'https://api.cardtrader.com/api/v2';
+import { useCallback, useState } from "react";
+import { CardModel } from "../models/cardTraderZeroCard";
+import { apiToken, endpoints, resolveImageUrl } from "./utils";
 
 export interface CardTraderNameSearchResult {
   card: CardModel | null;
@@ -12,13 +11,6 @@ export interface CardTraderNameSearchResult {
   handleBlueprintIdChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   searchCard: (searchId?: string) => Promise<void>;
   clearResults: () => void;
-}
-
-/** Resolve a relative CardTrader image URL to an absolute one. */
-function resolveImageUrl(raw?: string): string {
-  if (!raw) return '';
-  if (/^https?:\/\//i.test(raw)) return raw;
-  return `${API_BASE.replace('/api/v2', '')}${raw.startsWith('/') ? raw : `/${raw}`}`;
 }
 
 /**
@@ -33,15 +25,15 @@ function resolveImageUrl(raw?: string): string {
  *
  * @param apiKey - CardTrader API v2 Bearer Token
  */
-export const useCardTraderNameSearch = (
-  apiKey: string
-): CardTraderNameSearchResult => {
-  const [blueprintId, setBlueprintId] = useState<string>('');
+export const useCardTraderZeroSearch = (): CardTraderNameSearchResult => {
+  const [blueprintId, setBlueprintId] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [card, setCard] = useState<CardModel | null>(null);
 
-  const handleBlueprintIdChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleBlueprintIdChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
     setBlueprintId(e.target.value);
   };
 
@@ -54,7 +46,7 @@ export const useCardTraderNameSearch = (
     async (searchId: string = blueprintId): Promise<void> => {
       const trimmedId = searchId.trim();
       if (!trimmedId || isNaN(Number(trimmedId))) {
-        setError('Please enter a valid numeric blueprint ID.');
+        setError("Please enter a valid numeric blueprint ID.");
         return;
       }
 
@@ -63,29 +55,31 @@ export const useCardTraderNameSearch = (
       setCard(null);
 
       try {
-        const response = await fetch(
-          `${API_BASE}/blueprints/${encodeURIComponent(trimmedId)}`,
-          {
-            headers: {
-              Authorization: `Bearer ${apiKey}`,
-              Accept: 'application/json',
-            },
-          }
+        const url = new URL(
+          `${endpoints.blueprint}/${encodeURIComponent(trimmedId)}`,
         );
 
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${apiToken}`,
+            Accept: "application/json",
+          },
+        });
+
         if (!response.ok) {
-          throw new Error(`API Error: ${response.status} ${response.statusText}`);
+          throw new Error(
+            `API Error: ${response.status} ${response.statusText}`,
+          );
         }
 
         const bp = await response.json();
 
         // The blueprint image lives under `image.url`; the API also provides
         // a fallback image used when no real art is available.
-        const rawUrl = bp.image?.url || bp.image_url || bp.preview?.url || '';
+        const rawUrl = bp.image?.url || bp.image_url || bp.preview?.url || "";
         const imageUrl = resolveImageUrl(rawUrl);
         const isFallback =
-          !imageUrl ||
-          imageUrl.includes('fallbacks/card_uploader/default.png');
+          !imageUrl || imageUrl.includes("fallbacks/card_uploader/default.png");
 
         if (!isFallback) {
           setCard({
@@ -96,15 +90,15 @@ export const useCardTraderNameSearch = (
             expansionName: bp.expansion?.name || undefined,
           });
         } else {
-          setError('No card image available for this blueprint ID.');
+          setError("No card image available for this blueprint ID.");
         }
       } catch (err: any) {
-        setError(err.message || 'Failed to fetch card data.');
+        setError(err.message || "Failed to fetch card data.");
       } finally {
         setLoading(false);
       }
     },
-    [blueprintId, apiKey]
+    [blueprintId],
   );
 
   return {

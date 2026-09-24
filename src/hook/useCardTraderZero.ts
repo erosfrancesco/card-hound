@@ -1,10 +1,14 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { CardTraderProduct, CardTraderProductStats } from '../models/cardTraderZero'; // Adjust import path as needed
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  CardTraderProduct,
+  CardTraderProductStats,
+} from "../models/cardTraderZero"; // Adjust import path as needed
 
-export type SortOrder = 'asc' | 'desc';
+import { apiToken, endpoints } from "./utils";
+
+export type SortOrder = "asc" | "desc";
 
 interface UseCardTraderZeroOptions {
-  apiToken: string;
   blueprintId: number | null;
   languages?: string | string[];
   zeroOnly?: boolean;
@@ -20,11 +24,10 @@ interface UseCardTraderZeroReturn {
 }
 
 export const useCardTraderZero = ({
-  apiToken,
   blueprintId,
-  languages = ['en', 'it'],
+  languages = ["en", "it"],
   zeroOnly = true,
-  sortOrder = 'asc',
+  sortOrder = "asc",
 }: UseCardTraderZeroOptions): UseCardTraderZeroReturn => {
   const [products, setProducts] = useState<CardTraderProduct[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -46,19 +49,21 @@ export const useCardTraderZero = ({
     setError(null);
 
     try {
-      const url = new URL('https://api.cardtrader.com/api/v2/marketplace/products');
-      url.searchParams.append('blueprint_id', blueprintId.toString());
+      const url = new URL(endpoints.products);
+      url.searchParams.append("blueprint_id", blueprintId.toString());
 
       const response = await fetch(url.toString(), {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: `Bearer ${apiToken}`,
-          Accept: 'application/json',
+          Accept: "application/json",
         },
       });
 
       if (!response.ok) {
-        throw new Error(`CardTrader API Error: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `CardTrader API Error: ${response.status} ${response.statusText}`,
+        );
       }
 
       const data = await response.json();
@@ -74,28 +79,29 @@ export const useCardTraderZero = ({
         const itemLang = (
           product.properties_hash?.language ||
           product.properties_hash?.mtg_language ||
-          ''
+          ""
         ).toLowerCase();
 
-        const matchesLang = langList.length === 0 || langList.includes(itemLang);
+        const matchesLang =
+          langList.length === 0 || langList.includes(itemLang);
 
         return isZero && matchesLang;
       });
 
       // Sort products by price (cents)
       const sorted = [...filtered].sort((a, b) => {
-        return sortOrder === 'asc'
+        return sortOrder === "asc"
           ? a.price.cents - b.price.cents
           : b.price.cents - a.price.cents;
       });
 
       setProducts(sorted);
     } catch (err: any) {
-      setError(err.message || 'An unknown error occurred');
+      setError(err.message || "An unknown error occurred");
     } finally {
       setLoading(false);
     }
-  }, [apiToken, blueprintId, zeroOnly, sortOrder, JSON.stringify(langList)]);
+  }, [blueprintId, zeroOnly, sortOrder, JSON.stringify(langList)]);
 
   useEffect(() => {
     fetchCardData();
@@ -106,7 +112,7 @@ export const useCardTraderZero = ({
       return {
         lowestPrice: null,
         highestPrice: null,
-        currency: 'EUR',
+        currency: "EUR",
         totalAvailable: 0,
       };
     }
@@ -116,7 +122,7 @@ export const useCardTraderZero = ({
     return {
       lowestPrice: Math.min(...pricesCents) / 100,
       highestPrice: Math.max(...pricesCents) / 100,
-      currency: products[0]?.price?.currency || 'EUR',
+      currency: products[0]?.price?.currency || "EUR",
       totalAvailable: products.reduce((acc, curr) => acc + curr.quantity, 0),
     };
   }, [products]);

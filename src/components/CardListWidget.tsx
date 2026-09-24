@@ -1,51 +1,41 @@
-import React, { useState } from 'react';
-import { useCardTraderZero, SortOrder } from '../hook/useCardTraderZero';
-import { CardListRowWidget, CardListStatRowWidget } from './CardListWidgetRow';
+import React, { useState } from "react";
+import { SortOrder, useCardTraderZero } from "../hook/useCardTraderZero";
+import { CardListRowWidget, CardListStatRowWidget } from "./CardListWidgetRow";
 
 interface CardTraderWidgetProps {
   blueprintId: number;
-  cardName?: string;
 }
 
 export const CardListWidget: React.FC<CardTraderWidgetProps> = ({
   blueprintId,
-  cardName = 'Card Listings',
 }) => {
-  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
-  const apiToken = import.meta.env.VITE_CARDTRADER_API_TOKEN;
+  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 
   const { products, loading, error, stats, refetch } = useCardTraderZero({
-    apiToken,
     blueprintId,
-    languages: ['en', 'it'],
+    languages: ["en", "it"],
     zeroOnly: true,
     sortOrder,
   });
-
-  if (!apiToken) {
-    return (
-      <div className="p-4 border border-error/40 rounded-xl bg-error/10 text-error">
-        <strong>Error:</strong>{' '}
-        <code>VITE_CARDTRADER_API_TOKEN</code> is missing from your{' '}
-        <code>.env</code> file.
-      </div>
-    );
-  }
 
   return (
     <div className="bg-surface-container shadow-elev-2 rounded-xl p-5">
       <div className="flex justify-between items-center mb-4">
         <div>
-          <h3 className="m-0 text-lg font-medium text-on-surface">{cardName}</h3>
-          <span className="text-sm text-on-surface-variant">CardTrader Zero Listings</span>
+          <h3 className="m-0 text-lg font-medium text-on-surface">
+            {products?.[0]?.name_en}
+          </h3>
+          <span className="text-sm text-on-surface-variant">
+            CardTrader Zero Listings
+          </span>
         </div>
 
         <div className="flex gap-2">
           <button
-            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+            onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
             className="md-outlined-button"
           >
-            Price: {sortOrder === 'asc' ? 'Low → High' : 'High → Low'}
+            Price: {sortOrder === "asc" ? "Low → High" : "High → Low"}
           </button>
           <button
             onClick={refetch}
@@ -62,7 +52,9 @@ export const CardListWidget: React.FC<CardTraderWidgetProps> = ({
       )}
 
       {loading && (
-        <div className="text-center py-7 text-on-surface-variant">Loading products...</div>
+        <div className="text-center py-7 text-on-surface-variant">
+          Loading products...
+        </div>
       )}
 
       {error && (

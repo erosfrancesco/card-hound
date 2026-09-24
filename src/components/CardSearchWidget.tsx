@@ -1,13 +1,11 @@
-import React, { FormEvent } from 'react';
-import { useCardTraderNameSearch } from '../hook/useCardTraderNameSearch';
+import React, { SubmitEvent } from "react";
+import { useCardTraderZeroSearch } from "../hook/useCardTraderZeroSearch";
 
-export interface CardTraderImageDisplayProps {
-  apiKey: string;
-}
+export interface CardTraderImageDisplayProps {}
 
-export const CardTraderImageDisplay: React.FC<CardTraderImageDisplayProps> = ({
-  apiKey,
-}) => {
+export const CardTraderImageDisplay: React.FC<
+  CardTraderImageDisplayProps
+> = () => {
   const {
     card,
     loading,
@@ -16,22 +14,12 @@ export const CardTraderImageDisplay: React.FC<CardTraderImageDisplayProps> = ({
     handleBlueprintIdChange,
     searchCard,
     clearResults,
-  } = useCardTraderNameSearch(apiKey);
+  } = useCardTraderZeroSearch();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = (e: SubmitEvent<HTMLFormElement>): void => {
     e.preventDefault();
     searchCard();
   };
-
-  if (!apiKey) {
-    return (
-      <div className="bg-surface-container shadow-elev-2 rounded-xl p-5 text-on-surface">
-        <p className="text-on-surface-variant">
-          <strong>Configuration:</strong> Set <code>VITE_CARDTRADER_API_TOKEN</code> in your <code>.env</code> file.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-surface-container shadow-elev-2 rounded-xl p-6 max-w-md mx-auto">
@@ -40,8 +28,12 @@ export const CardTraderImageDisplay: React.FC<CardTraderImageDisplayProps> = ({
           🃏
         </span>
         <div>
-          <h3 className="text-lg font-medium text-on-surface m-0">CardTrader Image Lookup</h3>
-          <p className="text-sm text-on-surface-variant m-0">Look up a card by blueprint ID</p>
+          <h3 className="text-lg font-medium text-on-surface m-0">
+            CardTrader Image Lookup
+          </h3>
+          <p className="text-sm text-on-surface-variant m-0">
+            Look up a card by blueprint ID
+          </p>
         </div>
       </div>
 
@@ -55,7 +47,9 @@ export const CardTraderImageDisplay: React.FC<CardTraderImageDisplayProps> = ({
             disabled={loading}
             className="md-text-field"
           />
-          <label className="md-text-field-label">Blueprint ID (e.g. 16354)</label>
+          <label className="md-text-field-label">
+            Blueprint ID (e.g. 16354)
+          </label>
         </div>
 
         <div className="flex gap-2 self-start">
@@ -64,7 +58,7 @@ export const CardTraderImageDisplay: React.FC<CardTraderImageDisplayProps> = ({
             disabled={loading || !blueprintId.trim()}
             className="md-filled-button"
           >
-            {loading ? 'Looking up...' : 'Lookup'}
+            {loading ? "Looking up..." : "Lookup"}
           </button>
           {card && (
             <button
@@ -86,7 +80,9 @@ export const CardTraderImageDisplay: React.FC<CardTraderImageDisplayProps> = ({
 
       {card && (
         <div className="mt-5 flex flex-col items-center gap-3">
-          <h4 className="text-base font-medium text-on-surface m-0">{card.name}</h4>
+          <h4 className="text-base font-medium text-on-surface m-0">
+            {card.name}
+          </h4>
           {card.expansionName && (
             <span className="text-xs bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded-full">
               {card.expansionName}
