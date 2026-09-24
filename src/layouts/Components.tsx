@@ -232,8 +232,8 @@ export function Badge({
   return (
     <span
       className={clsx(
-        "rounded-full",
-        "px-2 p-1",
+        "rounded-full flex text-center justify-center items-center align-center",
+        "p-1",
         "text-sm",
         variant === "ok" &&
           "border border-emerald-300 bg-emerald-400 text-slate-950",

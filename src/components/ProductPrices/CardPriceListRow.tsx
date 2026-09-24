@@ -1,8 +1,8 @@
+import clsx from "clsx";
 import React from "react";
 import { Badge } from "../../layouts/Components";
 import { CardTraderProduct } from "../../models/cardTraderZero";
 import { CardPriceListRowName } from "./CardPriceListRowName";
-import clsx from "clsx";
 
 interface CardPriceListRowProps {
   product: CardTraderProduct;
@@ -26,10 +26,9 @@ export const CardPriceListRow: React.FC<CardPriceListRowProps> = ({
   return (
     <li
       className={clsx(
-        "flex justify-between items-center", 
-        "py-3.5 px-1 -mx-1", 
+        "flex justify-between items-center",
+        "py-3.5 px-1 -mx-1",
         "rounded-lg transition-colors hover:bg-surface-container-high",
-
       )}
       style={{
         borderBottom: hasBorder
@@ -41,11 +40,6 @@ export const CardPriceListRow: React.FC<CardPriceListRowProps> = ({
         <Badge className="w-6 h-6 rounded-full bg-surface-container-high text-on-surface">
           {count + 1}
         </Badge>
-        {/*}
-        <span className="w-6 h-6 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center text-xs font-semibold">
-          {count + 1}
-        </span>
-        {/** */}
 
         <div>
           <CardPriceListRowName product={product} />

@@ -13,6 +13,19 @@ It queries the CardTrader API, filters results to only sellers using the CardTra
 - Aggregated stats: lowest price, highest price, total available quantity
 - Color-coded card conditions (Mint / Near Mint / Lightly Played / Moderately Played / Heavily Played / Damaged)
 - Language and foil badges per listing
+- Image lookup by blueprint ID with CardTrader image CDN
+
+## Routing
+
+The app is a single-page app using [React Router](https://reactrouter.com/) v7. Available routes:
+
+| Path | Page | Description |
+|---|---|---|
+| `/` | (redirect) | Redirects to `/search` |
+| `/search` | `SearchPage` | CardTrader image lookup widget (enter a blueprint ID) |
+| `/search/:blueprintId` | `SearchPage` | Deep-linkable lookup with an ID in the URL |
+| `/product/:blueprintId` | `ProductPage` | Shows marketplace listings for a given blueprint ID via `CardPriceListWidget` |
+| `/my_favourites` | `FavouriteCardsPage` | Placeholder for saved cards (empty for now) |
 
 ## Getting Started
 
@@ -36,7 +49,12 @@ It queries the CardTrader API, filters results to only sellers using the CardTra
    npm start
    ```
 
-   Open <http://localhost:3000/> in your browser.
+    Open <http://localhost:3000/> in your browser.
+
+    > In GitHub Codespaces the dev server must bind to `--host` so the port-forward proxy can reach it:
+    > ```bash
+    > npm start -- --host
+    > ```
 
 ## Build for Production
 
@@ -61,8 +79,8 @@ The production bundle is output to the `dist/` directory.
 The UI is built with [Tailwind CSS](https://tailwindcss.com/) v4 via `@tailwindcss/vite`.
 
 - Utility classes live directly in the JSX components
-- `src/index.css` contains the `@tailwind` directives
-- `tailwind.config.js` and `postcss.config.js` drive the build pipeline
+- `src/index.css` contains the `@tailwind` directives and Material 3 CSS custom properties (color tokens, elevation, state layers)
+- `tailwind.config.js` defines a custom dark palette (`primary`, `surface-container`, `error`, etc.) consumed by the component utilities
 
 ## Learn More
 

@@ -1,7 +1,10 @@
 import { clsx } from "clsx";
 import { NavLink, Outlet } from "react-router-dom";
 
-const navItems = [{ to: "/my_cards", label: "My Cards" }];
+const navItems = [
+  { to: "/search", label: "Search" },
+  { to: "/my_favourites", label: "Favourites" },
+];
 
 export function MainLayout() {
   return (
