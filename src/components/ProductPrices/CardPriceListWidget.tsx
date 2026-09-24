@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { SortOrder, useCardTraderZero } from "../hook/useCardTraderZero";
-import { CardListRowWidget, CardListStatRowWidget } from "./CardListWidgetRow";
+import { SortOrder, useCardTraderZero } from "../../hook/useCardTraderZero";
+import { Button } from "../../layouts/Components";
+import { TypoH3 } from "../../layouts/Typography";
+import { CardPriceListRow } from "./CardPriceListRow";
+import { CardPriceListStats } from "./CardPriceListStats";
 
-interface CardTraderWidgetProps {
+interface CardPriceListWidgetProps {
   blueprintId: number;
 }
 
-export const CardListWidget: React.FC<CardTraderWidgetProps> = ({
+export const CardPriceListWidget: React.FC<CardPriceListWidgetProps> = ({
   blueprintId,
 }) => {
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
@@ -21,34 +24,27 @@ export const CardListWidget: React.FC<CardTraderWidgetProps> = ({
   return (
     <div className="bg-surface-container shadow-elev-2 rounded-xl p-5">
       <div className="flex justify-between items-center mb-4">
-        <div>
-          <h3 className="m-0 text-lg font-medium text-on-surface">
-            {products?.[0]?.name_en}
-          </h3>
-          <span className="text-sm text-on-surface-variant">
-            CardTrader Zero Listings
-          </span>
-        </div>
+        <TypoH3 className="m-0">{products?.[0]?.name_en}</TypoH3>
 
         <div className="flex gap-2">
-          <button
+          <Button
             onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
             className="md-outlined-button"
           >
             Price: {sortOrder === "asc" ? "Low → High" : "High → Low"}
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={refetch}
             className="md-icon-button"
             aria-label="Refresh"
           >
             ↻
-          </button>
+          </Button>
         </div>
       </div>
 
       {!loading && !error && products.length > 0 && (
-        <CardListStatRowWidget stats={stats} />
+        <CardPriceListStats stats={stats} />
       )}
 
       {loading && (
@@ -72,7 +68,7 @@ export const CardListWidget: React.FC<CardTraderWidgetProps> = ({
       {!loading && !error && products.length > 0 && (
         <ol className="list-none p-0 m-0">
           {products.map((product, index) => (
-            <CardListRowWidget
+            <CardPriceListRow
               key={index}
               product={product}
               count={index}

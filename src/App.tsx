@@ -1,5 +1,5 @@
-import { CardListWidget } from "./components/CardListWidget";
 import { CardTraderImageSearch } from "./components/ProductImage/CardImageWidget";
+import { CardPriceListWidget } from "./components/ProductPrices/CardPriceListWidget";
 
 // CardTrader Zero blueprint IDs for demonstration
 const CARDS = [{ blueprintId: 16354, name: "Balefire Dragon" }];
@@ -24,7 +24,7 @@ function App() {
         <CardTraderImageSearch />
 
         {CARDS.map((card, i) => (
-          <CardListWidget key={i} blueprintId={card.blueprintId} />
+          <CardPriceListWidget key={i} blueprintId={card.blueprintId} />
         ))}
       </main>
 

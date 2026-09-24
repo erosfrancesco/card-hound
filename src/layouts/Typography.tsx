@@ -51,7 +51,7 @@ export function TypoSpan({
   return (
     <span
       className={clsx(
-        "text-xs bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded-full",
+        "bg-surface-container-high text-on-surface-variant",
         className,
       )}
       {...props}
