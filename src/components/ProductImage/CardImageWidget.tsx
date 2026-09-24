@@ -4,11 +4,13 @@ import { Button, Input } from "../../layouts/Components";
 import { TypoH3 } from "../../layouts/Typography";
 import CardTraderImageContent from "./CardImageContent";
 
-export interface CardTraderImageSearchProps {}
+export interface CardTraderImageSearchProps {
+  onNavigateSearch?: (blueprintId: number) => void;
+}
 
 export const CardTraderImageSearch: React.FC<
   CardTraderImageSearchProps
-> = () => {
+> = ({ onNavigateSearch }) => {
   const {
     card,
     loading,
@@ -19,9 +21,12 @@ export const CardTraderImageSearch: React.FC<
     clearResults,
   } = useCardTraderZeroSearch();
 
-  const handleSubmit = (e: SubmitEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    searchCard();
+    await searchCard();
+    if (card && onNavigateSearch && blueprintId.trim()) {
+      onNavigateSearch(Number(blueprintId.trim()));
+    }
   };
 
   return (
