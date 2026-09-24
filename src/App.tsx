@@ -1,5 +1,5 @@
 import { CardListWidget } from "./components/CardListWidget";
-import { CardTraderImageDisplay } from "./components/ProductImage/CardImageWidget";
+import { CardTraderImageSearch } from "./components/ProductImage/CardImageWidget";
 
 // CardTrader Zero blueprint IDs for demonstration
 const CARDS = [{ blueprintId: 16354, name: "Balefire Dragon" }];
@@ -21,7 +21,7 @@ function App() {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 pb-24 flex flex-col gap-6">
-        <CardTraderImageDisplay />
+        <CardTraderImageSearch />
 
         {CARDS.map((card, i) => (
           <CardListWidget key={i} blueprintId={card.blueprintId} />
