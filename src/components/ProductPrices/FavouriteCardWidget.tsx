@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useCardImage } from "../../hook/useCardImage";
 import { useCardTraderZero } from "../../hook/useCardTraderZero";
 import { TypoH4, TypoSpan, TypoP } from "../../layouts/Typography";
@@ -7,12 +8,15 @@ import { Button } from "../../layouts/Components";
 interface FavouriteCardWidgetProps {
   blueprintId: number;
   onRemove: (blueprintId: number) => void;
+  hasBorder?: boolean;
 }
 
 export const FavouriteCardWidget: React.FC<FavouriteCardWidgetProps> = ({
   blueprintId,
   onRemove,
+  hasBorder = true,
 }) => {
+  const navigate = useNavigate();
   const { card, loading: imageLoading, error: imageError, fetchCardImage } =
     useCardImage();
 
@@ -21,7 +25,6 @@ export const FavouriteCardWidget: React.FC<FavouriteCardWidgetProps> = ({
     loading: pricesLoading,
     error: pricesError,
     stats,
-    refetch,
   } = useCardTraderZero({
     blueprintId,
     languages: ["en", "it"],
@@ -45,9 +48,26 @@ export const FavouriteCardWidget: React.FC<FavouriteCardWidgetProps> = ({
   const lowestPrice = stats.lowestPrice?.toFixed(2);
   const lowestPriceCurrency = stats.currency || "EUR";
 
+  const handleCardClick = () => {
+    navigate(`/product/${blueprintId}`);
+  };
+
+  const handleRemoveClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onRemove(blueprintId);
+  };
+
+  const borderStyle = hasBorder
+    ? { borderBottom: "1px solid var(--md-sys-color-outline-variant)" }
+    : {};
+
   if (imageLoading && pricesLoading) {
     return (
-      <div className="bg-surface-container shadow-elev-2 rounded-xl p-5 animate-pulse">
+      <div
+        className="bg-surface-container shadow-elev-2 rounded-xl p-5 animate-pulse cursor-pointer"
+        onClick={handleCardClick}
+        style={borderStyle}
+      >
         <div className="flex gap-4">
           <div className="w-24 h-34 bg-surface-container-high rounded-lg" />
           <div className="flex-1 flex flex-col justify-center gap-3">
@@ -61,10 +81,14 @@ export const FavouriteCardWidget: React.FC<FavouriteCardWidgetProps> = ({
   }
 
   return (
-    <div className="bg-surface-container shadow-elev-2 rounded-xl p-5 relative">
+    <div
+      className="bg-surface-container shadow-elev-2 rounded-xl p-5 relative cursor-pointer hover:shadow-elev-3 transition-shadow"
+      onClick={handleCardClick}
+      style={borderStyle}
+    >
       <Button
         className="md-icon-button absolute top-2 right-2"
-        onClick={() => onRemove(blueprintId)}
+        onClick={handleRemoveClick}
         aria-label={`Remove card ${blueprintId} from favourites`}
       >
         ✕
@@ -131,14 +155,6 @@ export const FavouriteCardWidget: React.FC<FavouriteCardWidgetProps> = ({
             </>
           )}
         </div>
-
-        <Button
-          onClick={refetch}
-          className="md-icon-button shrink-0 self-start mt-2"
-          aria-label="Refresh prices"
-        >
-          ↻
-        </Button>
       </div>
     </div>
   );

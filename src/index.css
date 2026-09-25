@@ -72,6 +72,11 @@ body {
   box-shadow: var(--theme-glow-button, inset 0 0 10px rgba(0, 255, 225, 0.1));
 }
 
+@utility theme-header {
+  box-shadow: var(--theme-glow-section, inset 0 0 18px rgba(0, 255, 225, 0.12));
+  border-bottom: 1px solid var(--theme-color-divider, rgba(103, 232, 249, 0.28));
+}
+
 @utility theme-divider {
   display: block;
   height: 1px;

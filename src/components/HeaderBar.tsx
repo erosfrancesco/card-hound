@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 const navItems = [
   { to: "/search", label: "Search" },
@@ -8,9 +8,16 @@ const navItems = [
 
 export function HeaderBar() {
   return (
-    <header className="bg-surface-container shadow-elev-1 border-b border-outline/20">
+    <header className="bg-surface-container theme-header">
       <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-        <h1 className="md-headline text-primary">CardTrader Zero Tracker</h1>
+        <Link
+          to="/"
+          className="flex items-center gap-2 md-headline text-primary hover:text-primary/80 transition-colors cursor-pointer"
+          aria-label="Go to home"
+        >
+          <span className="text-2xl" aria-hidden="true">🃏</span>
+          <span className="font-semibold tracking-tight">CardTrader Zero Tracker</span>
+        </Link>
         <nav className="flex gap-1">
           {navItems.map(({ to, label }) => (
             <NavLink
@@ -18,8 +25,8 @@ export function HeaderBar() {
               to={to}
               className={clsx(
                 "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
-                "text-on-surface-variant hover:text-primary",
-                "data-[active=true]:bg-primary/10 data-[active=true]:text-primary",
+                "text-on-surface-variant hover:text-primary hover:bg-primary/5",
+                "data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-semibold",
               )}
             >
               {label}

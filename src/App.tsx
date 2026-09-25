@@ -9,7 +9,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<Navigate to="/search" replace />} />
+          <Route index element={<Navigate to="/my_favourites" replace />} />
           <Route path="search" element={<SearchPage />} />
           <Route path="search/:blueprintId" element={<SearchPage />} />
           <Route path="my_favourites" element={<FavouriteCardsPage />} />
