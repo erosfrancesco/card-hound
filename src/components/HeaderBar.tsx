@@ -15,7 +15,7 @@ export function HeaderBar() {
           className="flex items-center gap-2 md-headline text-primary hover:text-primary/80 transition-colors cursor-pointer"
           aria-label="Go to home"
         >
-          <span className="text-2xl" aria-hidden="true">🃏</span>
+          <span className="text-2xl" aria-hidden="true">🦴</span>
           <span className="font-semibold tracking-tight">CardTrader Zero Tracker</span>
         </Link>
         <nav className="flex gap-1">

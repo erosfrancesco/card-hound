@@ -1,8 +1,8 @@
-# CardTrader Zero Tracker
+# Card Hound 🦴
+
+**Live Demo:** https://erosfrancesco.github.io/card-hound/
 
 A React + Vite app that tracks live **CardTrader Zero** marketplace listings for Magic: The Gathering cards.
-
-It queries the CardTrader API, filters results to only sellers using the CardTrader Zero fulfillment network, and displays pricing, condition, language, foil status, and seller info in a sortable, styled list.
 
 ## Features
 
@@ -22,13 +22,13 @@ It queries the CardTrader API, filters results to only sellers using the CardTra
 
 The app is a single-page app using [React Router](https://reactrouter.com/) v7. Available routes:
 
-| Path | Page | Description |
-|---|---|---|
-| `/` | (redirect) | Redirects to `/my_favourites` |
-| `/search` | `SearchPage` | CardTrader image lookup widget (enter a blueprint ID) |
-| `/search/:blueprintId` | `SearchPage` | Deep-linkable lookup with an ID in the URL |
-| `/product/:blueprintId` | `ProductPage` | Shows marketplace listings for a given blueprint ID via `CardPriceListWidget` |
-| `/my_favourites` | `FavouriteCardsPage` | Saved cards with image, name, first/lowest price, expansion badge |
+| Path                    | Page                 | Description                                                                   |
+| ----------------------- | -------------------- | ----------------------------------------------------------------------------- |
+| `/`                     | (redirect)           | Redirects to `/my_favourites`                                                 |
+| `/search`               | `SearchPage`         | CardTrader image lookup widget (enter a blueprint ID)                         |
+| `/search/:blueprintId`  | `SearchPage`         | Deep-linkable lookup with an ID in the URL                                    |
+| `/product/:blueprintId` | `ProductPage`        | Shows marketplace listings for a given blueprint ID via `CardPriceListWidget` |
+| `/my_favourites`        | `FavouriteCardsPage` | Saved cards with image, name, first/lowest price, expansion badge             |
 
 ## Getting Started
 
@@ -52,12 +52,13 @@ The app is a single-page app using [React Router](https://reactrouter.com/) v7. 
    npm start
    ```
 
-    Open <http://localhost:3000/> in your browser.
+   Open <http://localhost:3000/> in your browser.
 
-    > In GitHub Codespaces the dev server must bind to `--host` so the port-forward proxy can reach it:
-    > ```bash
-    > npm start -- --host
-    > ```
+   > In GitHub Codespaces the dev server must bind to `--host` so the port-forward proxy can reach it:
+   >
+   > ```bash
+   > npm start -- --host
+   > ```
 
 ## Build for Production
 
@@ -69,7 +70,7 @@ The production bundle is output to the `dist/` directory.
 
 ## Deploy to GitHub Pages
 
-The project is configured for GitHub Pages deployment at `https://erosfrancesco.github.io/codespaces-react/`.
+The project is configured for GitHub Pages deployment at `https://erosfrancesco.github.io/card-hound/`.
 
 ### Automatic Deployment (GitHub Actions)
 
@@ -79,6 +80,7 @@ Push to `main` branch triggers the workflow in `.github/workflows/deploy.yml`:
 2. Deploys to GitHub Pages
 
 **Setup:**
+
 1. Go to repository Settings → Secrets and variables → Actions
 2. Add repository secret: `VITE_CARDTRADER_API_TOKEN` with your CardTrader API token
 3. Enable GitHub Pages: Settings → Pages → Source: "GitHub Actions"
@@ -91,13 +93,13 @@ npm run deploy
 
 This runs `npm run build` then pushes the `dist/` folder to the `gh-pages` branch.
 
-> **Note:** The `vite.config.js` has `base: "/codespaces-react/"` for correct asset paths on GitHub Pages. If you fork/rename the repo, update this value to match your repository name.
+> **Note:** The `vite.config.js` has `base: "/card-hound/"` for correct asset paths on GitHub Pages. If you fork/rename the repo, update this value to match your repository name.
 
 ## Configuration
 
-| Variable | Required | Description |
-|---|---|---|
-| `VITE_CARDTRADER_API_TOKEN` | Yes | Your CardTrader API bearer token |
+| Variable                    | Required | Description                      |
+| --------------------------- | -------- | -------------------------------- |
+| `VITE_CARDTRADER_API_TOKEN` | Yes      | Your CardTrader API bearer token |
 
 ## CardTrader Zero
 
