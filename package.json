@@ -1,5 +1,5 @@
 {
-  "name": "codespaces-react",
+  "name": "card-hound",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -12,13 +12,15 @@
   "scripts": {
     "start": "BROWSER=none WDS_SOCKET_PORT=0 vite --port 3000",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.0.1",
+    "gh-pages": "^6.3.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
     "vite": "^8.0.16"

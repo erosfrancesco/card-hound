@@ -67,6 +67,32 @@ npm run build
 
 The production bundle is output to the `dist/` directory.
 
+## Deploy to GitHub Pages
+
+The project is configured for GitHub Pages deployment at `https://erosfrancesco.github.io/codespaces-react/`.
+
+### Automatic Deployment (GitHub Actions)
+
+Push to `main` branch triggers the workflow in `.github/workflows/deploy.yml`:
+
+1. Builds the app with `VITE_CARDTRADER_API_TOKEN` from repository secrets
+2. Deploys to GitHub Pages
+
+**Setup:**
+1. Go to repository Settings → Secrets and variables → Actions
+2. Add repository secret: `VITE_CARDTRADER_API_TOKEN` with your CardTrader API token
+3. Enable GitHub Pages: Settings → Pages → Source: "GitHub Actions"
+
+### Manual Deployment
+
+```bash
+npm run deploy
+```
+
+This runs `npm run build` then pushes the `dist/` folder to the `gh-pages` branch.
+
+> **Note:** The `vite.config.js` has `base: "/codespaces-react/"` for correct asset paths on GitHub Pages. If you fork/rename the repo, update this value to match your repository name.
+
 ## Configuration
 
 | Variable | Required | Description |
