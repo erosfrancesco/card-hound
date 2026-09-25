@@ -1,5 +1,6 @@
 import React, { SubmitEvent } from "react";
 import { useCardTraderZeroSearch } from "../../hook/useCardTraderZeroSearch";
+import { useFavourites } from "../../hook/useFavourites";
 import { Button, Input } from "../../layouts/Components";
 import { TypoH3 } from "../../layouts/Typography";
 import CardTraderImageContent from "./CardImageContent";
@@ -21,12 +22,22 @@ export const CardTraderImageSearch: React.FC<
     clearResults,
   } = useCardTraderZeroSearch();
 
+  const { has, add, remove } = useFavourites();
+
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     await searchCard();
     if (card && onNavigateSearch && blueprintId.trim()) {
       onNavigateSearch(Number(blueprintId.trim()));
     }
+  };
+
+  const currentId = blueprintId.trim() ? Number(blueprintId.trim()) : null;
+  const isSaved = currentId !== null && has(currentId);
+
+  const handleSaveToggle = () => {
+    if (currentId === null) return;
+    isSaved ? remove(currentId) : add(currentId);
   };
 
   return (
@@ -54,15 +65,25 @@ export const CardTraderImageSearch: React.FC<
           >
             {loading ? "Looking up..." : "Lookup"}
           </Button>
-          {card && (
-            <Button
-              type="button"
-              onClick={clearResults}
-              className="md-outlined-button"
-            >
-              Clear
-            </Button>
-          )}
+           {card && (
+             <Button
+               type="button"
+               onClick={clearResults}
+               className="md-outlined-button"
+             >
+               Clear
+             </Button>
+           )}
+           {currentId !== null && card && (
+             <Button
+               type="button"
+               onClick={handleSaveToggle}
+               className="md-outlined-button"
+               aria-pressed={isSaved}
+             >
+               {isSaved ? "★ Saved" : "☆ Save"}
+             </Button>
+           )}
         </form>
 
         {error && (
